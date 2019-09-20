@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, globalShortcut} = require('electron')
 app.commandLine.appendSwitch('--autoplay-policy','no-user-gesture-required')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -72,7 +72,12 @@ games_array.push({
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+app.on('ready', function() {
+	createWindow();
+	  globalShortcut.register('Escape', () => {
+    mainWindow.webContents.send('message', {type:"escape"});
+  })
+})
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

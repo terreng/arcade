@@ -176,6 +176,9 @@ document.querySelectorAll("#game_grid_inner")[0].innerHTML = pendhtml;
 reload_position();
 
 }
+if (message.type == "escape") {
+exitGame();
+}
 })
 
 function reload_position() {
