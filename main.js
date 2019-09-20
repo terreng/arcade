@@ -44,7 +44,9 @@ contents = JSON.parse(contents);
 games_array.push({
 	title: contents.title,
 	author: contents.author,
-	thumbnail: "C:\\games\\"+file+"\\thumbnail.png"
+	thumbnail: "C:\\games\\"+file+"\\thumbnail.png",
+	path: "C:\\games\\"+file+"\\index.html",
+	id: file
 });
 
   //console.log(file);

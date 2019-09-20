@@ -18,24 +18,31 @@ background-color: black;
 font-family: 'Open Sans', sans-serif;
 margin: 0;
 --gold: gold;
+overflow: hidden;
 }
 
 #title_top {
-width: 100%;
-height: 200px;
-font-size: 110px;
-color: var(--gold);
-text-align: center;
-padding-top: 25px;
+    width: 1920px;
+    height: 200px;
+    font-size: 110px;
+    color: var(--gold);
+    text-align: center;
+    padding-top: 25px;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    background: linear-gradient(black, #00000061);
 }
 
 #game_grid {
 	height: calc(100% - 225px);
-    overflow: hidden;
+    margin-top: 200px;
 }
 
 #game_grid_inner {
 	padding: 50px;
+    overflow: hidden;
+	transition: margin-top 0.18s ease 0s;
 }
 
 .game {
@@ -59,12 +66,18 @@ padding-top: 25px;
     padding-top: 18px;
     font-size: 37px;
     color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .game div:nth-child(3) {
     padding-top: 5px;
     font-size: 30px;
     color: #a7a7a7;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .game.selected {
@@ -78,6 +91,27 @@ color: black;
 
 .game.selected div:nth-child(3) {
 color: #525252;
+}
+
+#main_menu {
+    transition: 0.8s opacity;
+	opacity: 1;
+}
+
+#game_fullscreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+	opacity: 0;
+transition: 0.8s opacity;
+}
+
+#game_fullscreen iframe {
+border: 0;
+width: 100%;
+height: 100%;
 }
 </style>
 <div id="main_menu">
@@ -94,6 +128,9 @@ color: #525252;
 </div>
 </div>
 </div>
+<div id="game_fullscreen">
+
+</div>
 <script>
 
 function htmlescape(str) {
@@ -105,30 +142,121 @@ return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").re
 }
 const ipc = require('electron').ipcRenderer;
 
+var position = 0;
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+var games;
+
 ipc.on('message', (event, message) => {
 if (message.type == "main_load") {
 
 var pendhtml = "";//REMEMBER TO GET NEW GOLD AND HTMLESCAPE
 
 console.log(message.games)
+games = message.games;
+
+shuffle(message.games)
 
 for (var i = 0; i < message.games.length; i++) {
 
-pendhtml += '<div class="game"><div><img src="'+message.games[i].thumbnail+'"></img></div><div>'+htmlescape(message.games[i].title)+'</div><div>'+htmlescape(message.games[i].author)+'</div></div>'
+pendhtml += '<div class="game" id="game_'+message.games[i].id+'"><div><img src="'+message.games[i].thumbnail+'"></img></div><div>'+htmlescape(message.games[i].title)+'</div><div>'+htmlescape(message.games[i].author)+'</div></div>'
 
 }
 
 console.log(pendhtml)
 
 document.querySelectorAll("#game_grid_inner")[0].innerHTML = pendhtml;
+reload_position();
 
 }
 })
 
-document.body.onkeypress = function(e){
-	if (e.key == "Enter") {
+function reload_position() {
+var childs = document.querySelectorAll("#game_grid_inner")[0].children;
+for (var i = 0; i < childs.length; i++) {
+childs[i].classList.remove("selected");
+}
+childs[position].classList.add("selected");
+document.querySelectorAll("#game_grid_inner")[0].style.marginTop = "-"+Math.floor(position/3)*581+"px";
+}
 
+document.onkeydown = function(e){
+	if (e.key == "Enter" && on_menu) {//select game
+		document.querySelectorAll("#main_menu")[0].style.opacity = "0";
+		document.querySelectorAll("#game_fullscreen")[0].innerHTML = '<iframe onload="gameFrameLoad()" src="'+games[position].path+'"></iframe>'
+		setTimeout(function() {
+			checkDisplayGame();
+		},800)
+		on_menu = false;
 	}
+	if (e.key == "Escape" && in_game) {//select game
+		exitGame();
+	}
+	if (e.keyCode == '37' && on_menu) {//left
+	if (position % 3 !== 0) {
+		position -= 1;
+		reload_position();
+	}	
+	}
+	if (e.keyCode == '39' && on_menu) {//right
+	if (position % 3 !== 2 && !(position+1 == games.length)) {
+		position += 1;
+		reload_position();
+	}
+	}
+	if (e.keyCode == '38' && on_menu) {//up
+	if (!(position-2 <= 0)) {
+		position -= 3;
+		reload_position();
+	}
+	}
+	if (e.keyCode == '40' && on_menu) {//down
+	if (!(position+3 >= games.length)) {
+		position += 3;
+		reload_position();
+	}
+	}
+}
+
+var on_menu = true;
+var in_game = false;
+
+function exitGame() {
+document.querySelectorAll("#game_fullscreen")[0].style.opacity = "0";
+setTimeout(function() {
+document.querySelectorAll("#main_menu")[0].style.opacity = "1";
+document.querySelectorAll("#game_fullscreen")[0].innerHTML = "";
+setTimeout(function() {
+on_menu = true;
+},800)
+},800)
+check = 0;
+in_game = false;
+}
+
+function gameFrameLoad() {
+var styles = '<style>#openfl-content {height: 100%; width: 100%;}canvas {height: 100% !important;width: 100%!important;object-fit: contain;}</style>';
+document.querySelectorAll("iframe")[0].contentDocument.querySelector("body").insertAdjacentHTML("beforeend",styles);
+checkDisplayGame();
+}
+
+var check = 0;
+function checkDisplayGame() {
+check++;
+if (check == 2) {
+document.querySelectorAll("#game_fullscreen")[0].style.opacity = "1";
+document.querySelectorAll("iframe")[0].focus();
+setTimeout(function() {
+in_game = true;
+},800)
+}
 }
 
 const remote = require('electron').remote;
