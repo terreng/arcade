@@ -1,0 +1,141 @@
+<html>
+<head>
+
+</head>
+<body>
+<style>
+/* latin */
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans Regular'), local('OpenSans-Regular'), url(font.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+body {
+background-color: black;
+font-family: 'Open Sans', sans-serif;
+margin: 0;
+--gold: gold;
+}
+
+#title_top {
+width: 100%;
+height: 200px;
+font-size: 110px;
+color: var(--gold);
+text-align: center;
+padding-top: 25px;
+}
+
+#game_grid {
+	height: calc(100% - 225px);
+    overflow: hidden;
+}
+
+#game_grid_inner {
+	padding: 50px;
+}
+
+.game {
+    margin: 25px;
+    width: calc((100% / 3) - 100px);
+    float: left;
+    padding: 25px;
+}
+
+.game div:nth-child(1) {
+    height: 382px;
+}
+
+.game img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.game div:nth-child(2) {
+    padding-top: 18px;
+    font-size: 37px;
+    color: white;
+}
+
+.game div:nth-child(3) {
+    padding-top: 5px;
+    font-size: 30px;
+    color: #a7a7a7;
+}
+
+.game.selected {
+    background: white;
+    border-radius: 10px;
+}
+
+.game.selected div:nth-child(2) {
+color: black;
+}
+
+.game.selected div:nth-child(3) {
+color: #525252;
+}
+</style>
+<div id="main_menu">
+<div id="title_top">Rider Arcade</div>
+<div id="game_grid">
+<div id="game_grid_inner">
+<div class="game">
+<div>
+<img src="thumbnail.png"></img>
+</div>
+<div>Title of the game</div>
+<div>Author name</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+
+function htmlescape(str) {
+if (str == undefined) {
+return str;
+}
+str = String(str);
+return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+const ipc = require('electron').ipcRenderer;
+
+ipc.on('message', (event, message) => {
+if (message.type == "main_load") {
+
+var pendhtml = "";//REMEMBER TO GET NEW GOLD AND HTMLESCAPE
+
+console.log(message.games)
+
+for (var i = 0; i < message.games.length; i++) {
+
+pendhtml += '<div class="game"><div><img src="'+message.games[i].thumbnail+'"></img></div><div>'+htmlescape(message.games[i].title)+'</div><div>'+htmlescape(message.games[i].author)+'</div></div>'
+
+}
+
+console.log(pendhtml)
+
+document.querySelectorAll("#game_grid_inner")[0].innerHTML = pendhtml;
+
+}
+})
+
+document.body.onkeypress = function(e){
+	if (e.key == "Enter") {
+
+	}
+}
+
+const remote = require('electron').remote;
+function exit() {
+var window = remote.getCurrentWindow();
+       window.close();
+}
+</script>
+</body>
+</html>
