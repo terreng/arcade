@@ -94,7 +94,7 @@ color: #525252;
 }
 
 #main_menu {
-    transition: 0.8s opacity;
+    transition: 0.5s opacity;
 	opacity: 1;
 }
 
@@ -105,7 +105,7 @@ color: #525252;
     right: 0;
     bottom: 0;
 	opacity: 0;
-transition: 0.8s opacity;
+transition: 0.5s opacity;
 }
 
 #game_fullscreen iframe {
@@ -113,9 +113,64 @@ border: 0;
 width: 100%;
 height: 100%;
 }
+
+#exit_prompt {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+#exit_prompt_prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: black;
+    width: 700px;
+    height: 336px;
+    transform: translate(-50%,-50%);
+    border-radius: 14px;
+    box-shadow: 0 2px 20px 2px black;
+}
+
+#exit_prompt_prompt div:nth-child(1) {
+    color: white;
+    font-size: 45px;
+    text-align: center;
+    margin-top: 44px;
+}
+
+#exit_prompt_prompt div:nth-child(2) {
+    font-size: 38px;
+    padding: 26px;
+    border: 2px solid white;
+    color: white;
+    border-radius: 16px;
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+}
+
+#exit_prompt_prompt div:nth-child(3) {
+    font-size: 38px;
+    padding: 26px;
+    border: 2px solid white;
+    color: white;
+    border-radius: 16px;
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+}
+
+#exit_prompt_prompt div.selected {
+    background-color: white;
+    color: black;
+}
 </style>
 <div id="main_menu">
-<div id="title_top">Rider Arcade</div>
+<div id="title_top"><img src="logo.svg"></img></div>
 <div id="game_grid">
 <div id="game_grid_inner">
 <div class="game">
@@ -130,6 +185,13 @@ height: 100%;
 </div>
 <div id="game_fullscreen">
 
+</div>
+<div id="exit_prompt" style="display: none;">
+<div id="exit_prompt_prompt">
+<div>Do you really want to exit?</div>
+<div id="prompt_cancel">Cancel</div>
+<div id="prompt_confirm">Confirm</div>
+</div>
 </div>
 <script>
 
@@ -176,8 +238,12 @@ document.querySelectorAll("#game_grid_inner")[0].innerHTML = pendhtml;
 reload_position();
 
 }
-if (message.type == "escape") {
-exitGame();
+if (message.type == "escape" && in_game) {
+if (inexitprompt) {
+cancelExitPrompt();
+} else {
+exitPrompt();
+}
 }
 })
 
@@ -196,8 +262,16 @@ document.onkeydown = function(e){
 		document.querySelectorAll("#game_fullscreen")[0].innerHTML = '<iframe onload="gameFrameLoad()" src="'+games[position].path+'"></iframe>'
 		setTimeout(function() {
 			checkDisplayGame();
-		},800)
+		},500)
 		on_menu = false;
+	}
+	if (e.key == "Enter" && inexitprompt) {
+	if (exit_selected == 0) {
+		cancelExitPrompt();
+	}
+	if (exit_selected == 1) {
+		confirmExitPrompt();
+	}
 	}
 	if (e.key == "Escape" && in_game) {//select game
 		exitGame();
@@ -208,11 +282,21 @@ document.onkeydown = function(e){
 		reload_position();
 	}	
 	}
+	if (e.keyCode == '37' && inexitprompt) {
+	exit_selected = 0;
+	document.querySelectorAll("#prompt_confirm")[0].classList.remove("selected");
+	document.querySelectorAll("#prompt_cancel")[0].classList.add("selected");
+	}
 	if (e.keyCode == '39' && on_menu) {//right
 	if (position % 3 !== 2 && !(position+1 == games.length)) {
 		position += 1;
 		reload_position();
 	}
+	}
+	if (e.keyCode == '39' && inexitprompt) {
+	exit_selected = 1;
+	document.querySelectorAll("#prompt_confirm")[0].classList.add("selected");
+	document.querySelectorAll("#prompt_cancel")[0].classList.remove("selected");
 	}
 	if (e.keyCode == '38' && on_menu) {//up
 	if (!(position-2 <= 0)) {
@@ -238,8 +322,8 @@ document.querySelectorAll("#main_menu")[0].style.opacity = "1";
 document.querySelectorAll("#game_fullscreen")[0].innerHTML = "";
 setTimeout(function() {
 on_menu = true;
-},800)
-},800)
+},500)
+},500)
 check = 0;
 in_game = false;
 }
@@ -258,7 +342,7 @@ document.querySelectorAll("#game_fullscreen")[0].style.opacity = "1";
 document.querySelectorAll("iframe")[0].focus();
 setTimeout(function() {
 in_game = true;
-},800)
+},500)
 }
 }
 
@@ -266,6 +350,27 @@ const remote = require('electron').remote;
 function exit() {
 var window = remote.getCurrentWindow();
        window.close();
+}
+
+var exit_selected = 0;
+var inexitprompt = false;
+
+function exitPrompt() {
+exit_selected = 0;
+inexitprompt = true;
+document.querySelectorAll("#exit_prompt")[0].style.display = "block";
+document.querySelectorAll("#prompt_confirm")[0].classList.remove("selected");
+document.querySelectorAll("#prompt_cancel")[0].classList.add("selected");
+}
+
+function cancelExitPrompt() {
+inexitprompt = false;
+document.querySelectorAll("#exit_prompt")[0].style.display = "none";
+}
+
+function confirmExitPrompt() {
+inexitprompt = false;
+exitGame();
 }
 </script>
 </body>
