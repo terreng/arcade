@@ -74,10 +74,40 @@ games_array.push({
 // Some APIs can only be used after this event occurs.
 app.on('ready', function() {
 	createWindow();
-	  globalShortcut.register('Escape', () => {
-    mainWindow.webContents.send('message', {type:"escape"});
-  })
+	registerAllKeyListeners();
 })
+
+function registerAllKeyListeners() {
+globalShortcut.register('Enter', () => {
+	mainWindow.webContents.send('message', {type:"enter"});
+})
+globalShortcut.register('Escape', () => {
+	mainWindow.webContents.send('message', {type:"escape"});
+})
+globalShortcut.register('Left', () => {
+	mainWindow.webContents.send('message', {type:"left"});
+})
+globalShortcut.register('Right', () => {
+	mainWindow.webContents.send('message', {type:"right"});
+})
+globalShortcut.register('Up', () => {
+	mainWindow.webContents.send('message', {type:"up"});
+})
+globalShortcut.register('Down', () => {
+	mainWindow.webContents.send('message', {type:"down"});
+})
+globalShortcut.register('Insert', () => {
+	globalShortcut.unregisterAll();
+setTimeout(function() {
+	globalShortcut.register('Insert', () => {
+		globalShortcut.unregisterAll();
+		setTimeout(function() {
+			registerAllKeyListeners();
+		},300)
+	})
+},300)
+})
+}
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
