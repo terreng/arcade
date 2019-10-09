@@ -76,7 +76,7 @@ games_array.push({
 const ioHook = require('iohook');
 
 ioHook.on('keydown', event => {
-  console.log(event);
+  console.log(event);//TODO: Get ASCII ids for all keys and detect release
 });
 
 ioHook.on('keyup', event => {
@@ -97,6 +97,9 @@ globalShortcut.register('Enter', () => {//Enter key
 })
 globalShortcut.register('Escape', () => {//Exit key
 	mainWindow.webContents.send('message', {type:"escape"});
+})
+globalShortcut.register('Home', () => {//Exit key
+	mainWindow.webContents.send('message', {type:"menu"});
 })
 //
 
