@@ -72,30 +72,100 @@ games_array.push({
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
+
+const ioHook = require('iohook');
+
+ioHook.on('keydown', event => {
+  console.log(event);
+});
+
+ioHook.on('keyup', event => {
+  console.log(event);
+});
+
+ioHook.start();
+
 app.on('ready', function() {
 	createWindow();
 	registerAllKeyListeners();
 })
 
 function registerAllKeyListeners() {
-globalShortcut.register('Enter', () => {
+//SYSTEM KEYS
+globalShortcut.register('Enter', () => {//Enter key
 	mainWindow.webContents.send('message', {type:"enter"});
 })
-globalShortcut.register('Escape', () => {
+globalShortcut.register('Escape', () => {//Exit key
 	mainWindow.webContents.send('message', {type:"escape"});
 })
-globalShortcut.register('Left', () => {
-	mainWindow.webContents.send('message', {type:"left"});
+//
+
+//PLAYER ONE
+globalShortcut.register('Left', () => {//Player one left
+	mainWindow.webContents.send('message', {type:"1_left"});
 })
-globalShortcut.register('Right', () => {
-	mainWindow.webContents.send('message', {type:"right"});
+globalShortcut.register('Right', () => {//player one right
+	mainWindow.webContents.send('message', {type:"1_right"});
 })
-globalShortcut.register('Up', () => {
-	mainWindow.webContents.send('message', {type:"up"});
+globalShortcut.register('Up', () => {//player one up
+	mainWindow.webContents.send('message', {type:"1_up"});
 })
-globalShortcut.register('Down', () => {
-	mainWindow.webContents.send('message', {type:"down"});
+globalShortcut.register('Down', () => {//player one down
+	mainWindow.webContents.send('message', {type:"1_down"});
 })
+globalShortcut.register('A', () => {//player one joystick left
+	mainWindow.webContents.send('message', {type:"1_stick_left"});
+})
+globalShortcut.register('D', () => {//player one joystick right
+	mainWindow.webContents.send('message', {type:"1_stick_right"});
+})
+globalShortcut.register('W', () => {//player one joystick up
+	mainWindow.webContents.send('message', {type:"1_stick_up"});
+})
+globalShortcut.register('S', () => {//player one joystick down
+	mainWindow.webContents.send('message', {type:"1_stick_down"});
+})
+globalShortcut.register('Q', () => {//player one action 1
+	mainWindow.webContents.send('message', {type:"1_action_1"});
+})
+globalShortcut.register('E', () => {//player one action 2
+	mainWindow.webContents.send('message', {type:"1_action_2"});
+})
+//
+
+//PLAYER TWO
+globalShortcut.register('4', () => {//Player two left
+	mainWindow.webContents.send('message', {type:"2_left"});
+})
+globalShortcut.register('6', () => {//player two right
+	mainWindow.webContents.send('message', {type:"2_right"});
+})
+globalShortcut.register('8', () => {//player two up
+	mainWindow.webContents.send('message', {type:"2_up"});
+})
+globalShortcut.register('5', () => {//player two down
+	mainWindow.webContents.send('message', {type:"2_down"});
+})
+globalShortcut.register('J', () => {//player two joystick left
+	mainWindow.webContents.send('message', {type:"2_stick_left"});
+})
+globalShortcut.register('L', () => {//player two joystick right
+	mainWindow.webContents.send('message', {type:"2_stick_right"});
+})
+globalShortcut.register('I', () => {//player two joystick up
+	mainWindow.webContents.send('message', {type:"2_stick_up"});
+})
+globalShortcut.register('K', () => {//player two joystick down
+	mainWindow.webContents.send('message', {type:"2_stick_down"});
+})
+globalShortcut.register('U', () => {//player two action 1
+	mainWindow.webContents.send('message', {type:"2_action_1"});
+})
+globalShortcut.register('O', () => {//player two action 2
+	mainWindow.webContents.send('message', {type:"2_action_2"});
+})
+//
+
 globalShortcut.register('Insert', () => {
 	globalShortcut.unregisterAll();
 setTimeout(function() {
