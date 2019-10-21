@@ -75,12 +75,43 @@ games_array.push({
 
 const ioHook = require('iohook');
 
+const internal_keycodes_to_names = {
+	"13": "enter",
+	"27": "escape",
+	"36": "menu",
+	"38": "1_up",
+	"40": "1_down",
+	"37": "1_left",
+	"39": "1_right",
+	"87": "1_stick_up",
+	"83": "1_stick_down",
+	"65": "1_stick_left",
+	"68": "1_stick_right",
+	"81": "1_action_1",
+	"69": "1_action_2",
+	"56": "2_up",
+	"53": "2_down",
+	"52": "2_left",
+	"54": "2_right",
+	"73": "2_stick_up",
+	"75": "2_stick_down",
+	"74": "2_stick_left",
+	"76": "2_stick_right",
+	"85": "2_action_1",
+	"79": "2_action_2"
+}
+
 ioHook.on('keydown', event => {
-  console.log(event);//TODO: Get ASCII ids for all keys and detect release
+	console.log(event);//TODO: Get ASCII ids for all keys and detect release
+if (internal_keycodes_to_names[String(event.rawcode)]) {
+	mainWindow.webContents.send('message', {internal_keycodes_to_names[String(event.rawcode)],origin:"keydown"});
+}
 });
 
 ioHook.on('keyup', event => {
-  console.log(event);
+if (internal_keycodes_to_names[String(event.rawcode)]) {
+	mainWindow.webContents.send('message', {internal_keycodes_to_names[String(event.rawcode)],origin:"keup"});
+}
 });
 
 ioHook.start();
@@ -93,79 +124,79 @@ app.on('ready', function() {
 function registerAllKeyListeners() {
 //SYSTEM KEYS
 globalShortcut.register('Enter', () => {//Enter key
-	mainWindow.webContents.send('message', {type:"enter"});
+	mainWindow.webContents.send('message', {type:"enter",origin:"global"});
 })
 globalShortcut.register('Escape', () => {//Exit key
-	mainWindow.webContents.send('message', {type:"escape"});
+	mainWindow.webContents.send('message', {type:"escape",origin:"global"});
 })
 globalShortcut.register('Home', () => {//Exit key
-	mainWindow.webContents.send('message', {type:"menu"});
+	mainWindow.webContents.send('message', {type:"menu",origin:"global"});
 })
 //
 
 //PLAYER ONE
 globalShortcut.register('Left', () => {//Player one left
-	mainWindow.webContents.send('message', {type:"1_left"});
+	mainWindow.webContents.send('message', {type:"1_left",origin:"global"});
 })
 globalShortcut.register('Right', () => {//player one right
-	mainWindow.webContents.send('message', {type:"1_right"});
+	mainWindow.webContents.send('message', {type:"1_right",origin:"global"});
 })
 globalShortcut.register('Up', () => {//player one up
-	mainWindow.webContents.send('message', {type:"1_up"});
+	mainWindow.webContents.send('message', {type:"1_up",origin:"global"});
 })
 globalShortcut.register('Down', () => {//player one down
-	mainWindow.webContents.send('message', {type:"1_down"});
+	mainWindow.webContents.send('message', {type:"1_down",origin:"global"});
 })
 globalShortcut.register('A', () => {//player one joystick left
-	mainWindow.webContents.send('message', {type:"1_stick_left"});
+	mainWindow.webContents.send('message', {type:"1_stick_left",origin:"global"});
 })
 globalShortcut.register('D', () => {//player one joystick right
-	mainWindow.webContents.send('message', {type:"1_stick_right"});
+	mainWindow.webContents.send('message', {type:"1_stick_right",origin:"global"});
 })
 globalShortcut.register('W', () => {//player one joystick up
-	mainWindow.webContents.send('message', {type:"1_stick_up"});
+	mainWindow.webContents.send('message', {type:"1_stick_up",origin:"global"});
 })
 globalShortcut.register('S', () => {//player one joystick down
-	mainWindow.webContents.send('message', {type:"1_stick_down"});
+	mainWindow.webContents.send('message', {type:"1_stick_down",origin:"global"});
 })
 globalShortcut.register('Q', () => {//player one action 1
-	mainWindow.webContents.send('message', {type:"1_action_1"});
+	mainWindow.webContents.send('message', {type:"1_action_1",origin:"global"});
 })
 globalShortcut.register('E', () => {//player one action 2
-	mainWindow.webContents.send('message', {type:"1_action_2"});
+	mainWindow.webContents.send('message', {type:"1_action_2",origin:"global"});
 })
 //
 
 //PLAYER TWO
 globalShortcut.register('4', () => {//Player two left
-	mainWindow.webContents.send('message', {type:"2_left"});
+	mainWindow.webContents.send('message', {type:"2_left",origin:"global"});
 })
 globalShortcut.register('6', () => {//player two right
-	mainWindow.webContents.send('message', {type:"2_right"});
+	mainWindow.webContents.send('message', {type:"2_right",origin:"global"});
 })
 globalShortcut.register('8', () => {//player two up
-	mainWindow.webContents.send('message', {type:"2_up"});
+	mainWindow.webContents.send('message', {type:"2_up",origin:"global"});
 })
 globalShortcut.register('5', () => {//player two down
-	mainWindow.webContents.send('message', {type:"2_down"});
+	mainWindow.webContents.send('message', {type:"2_down",origin:"global"});
 })
 globalShortcut.register('J', () => {//player two joystick left
-	mainWindow.webContents.send('message', {type:"2_stick_left"});
+	mainWindow.webContents.send('message', {type:"2_stick_left",origin:"global"});
 })
 globalShortcut.register('L', () => {//player two joystick right
-	mainWindow.webContents.send('message', {type:"2_stick_right"});
+	mainWindow.webContents.send('message', {type:"2_stick_right",origin:"global"});
 })
 globalShortcut.register('I', () => {//player two joystick up
-	mainWindow.webContents.send('message', {type:"2_stick_up"});
+	mainWindow.webContents.send('message', {type:"2_stick_up",origin:"global"});
 })
 globalShortcut.register('K', () => {//player two joystick down
-	mainWindow.webContents.send('message', {type:"2_stick_down"});
+	mainWindow.webContents.send('message', {type:"2_stick_down",origin:"global"});
 })
 globalShortcut.register('U', () => {//player two action 1
-	mainWindow.webContents.send('message', {type:"2_action_1"});
+	mainWindow.webContents.send('message', {type:"2_action_1",origin:"global"});
 })
 globalShortcut.register('O', () => {//player two action 2
-	mainWindow.webContents.send('message', {type:"2_action_2"});
+	mainWindow.webContents.send('message', {type:"2_action_2",origin:"global"});
 })
 //
 

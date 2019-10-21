@@ -216,6 +216,31 @@ function shuffle(a) {
 
 var games;
 
+var default_keybindings = {
+	"enter": 13,
+	"menu": 27,
+	"1_left": 37,
+	"1_right": 39,
+	"1_up": 38,
+	"1_down": 40,
+	"1_stick_left": 65,
+	"1_stick_right": 68,
+	"1_stick_up": 87,
+	"1_stick_down": 83,
+	"1_action_1": [81, 32],
+	"1_action_2": 69,
+	"2_left": [52, 100],
+	"2_right": [54, 102],
+	"2_up": [56, 104],
+	"2_down": [53, 101, 50, 98],
+	"2_stick_left": 74,
+	"2_stick_right": 76,
+	"2_stick_up": 73,
+	"2_stick_down": 75,
+	"2_action_1": 85,
+	"2_action_2": 79,
+}
+
 ipc.on('message', (event, message) => {
 if (message.type == "main_load") {
 
@@ -237,6 +262,15 @@ console.log(pendhtml)
 document.querySelectorAll("#game_grid_inner")[0].innerHTML = pendhtml;
 reload_position();
 
+}
+if (message.origin == "keyup" && in_game) {
+if (default_keybindings[message.type]) {
+if (typeof default_keybindings[message.type] == "object") {
+
+} else {
+
+}
+}
 }
 if (message.type == "enter") {
 if (on_menu) {
@@ -265,7 +299,7 @@ exitPrompt();
 }
 }
 }
-if (message.type == "left") {
+if (message.type == "1_left" || message.type == "2_left" || message.type == "1_stick_left" || message.type == "2_stick_left") {
 if (inexitprompt) {
 	exit_selected = 0;
 	document.querySelectorAll("#prompt_confirm")[0].classList.remove("selected");
@@ -278,7 +312,7 @@ if (on_menu) {
 	}	
 }
 }
-if (message.type == "right") {
+if (message.type == "1_right" || message.type == "2_right" || message.type == "1_stick_right" || message.type == "2_stick_right") {
 if (inexitprompt) {
 	exit_selected = 1;
 	document.querySelectorAll("#prompt_confirm")[0].classList.add("selected");
@@ -291,7 +325,7 @@ if (on_menu) {
 	}
 }
 }
-if (message.type == "up") {
+if (message.type == "1_up" || message.type == "2_up" || message.type == "1_stick_up" || message.type == "2_stick_up") {
 if (on_menu) {
 	if (!(position-2 <= 0)) {
 		position -= 3;
@@ -299,7 +333,7 @@ if (on_menu) {
 	}
 }
 }
-if (message.type == "down") {
+if (message.type == "1_down" || message.type == "2_down" || message.type == "1_stick_down" || message.type == "2_stick_down") {
 if (on_menu) {
 	if (!(position+3 >= games.length)) {
 		position += 3;
