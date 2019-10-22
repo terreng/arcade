@@ -75,7 +75,7 @@ games_array.push({
 
 const ioHook = require('iohook');
 
-const internal_keycodes_to_names = {
+var internal_keycodes_to_names = {
 	"13": "enter",
 	"27": "escape",
 	"36": "menu",
@@ -104,13 +104,13 @@ const internal_keycodes_to_names = {
 ioHook.on('keydown', event => {
 	console.log(event);//TODO: Get ASCII ids for all keys and detect release
 if (internal_keycodes_to_names[String(event.rawcode)]) {
-	mainWindow.webContents.send('message', {internal_keycodes_to_names[String(event.rawcode)],origin:"keydown"});
+	mainWindow.webContents.send('message', {type:internal_keycodes_to_names[String(event.rawcode)],origin:"keydown"});
 }
 });
 
 ioHook.on('keyup', event => {
 if (internal_keycodes_to_names[String(event.rawcode)]) {
-	mainWindow.webContents.send('message', {internal_keycodes_to_names[String(event.rawcode)],origin:"keup"});
+	mainWindow.webContents.send('message', {type:internal_keycodes_to_names[String(event.rawcode)],origin:"keup"});
 }
 });
 
