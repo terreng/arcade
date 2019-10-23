@@ -263,12 +263,22 @@ document.querySelectorAll("#game_grid_inner")[0].innerHTML = pendhtml;
 reload_position();
 
 }
-if (message.origin == "keyup" && in_game) {
+if ((message.origin == "keyup" || message.origin == "keydown") && in_game) {
 if (default_keybindings[message.type]) {
 if (typeof default_keybindings[message.type] == "object") {
-
+for (var i = 0; i < default_keybindings[message.type].length; i++) {
+var keycode = default_keybindings[message.type][i];
+var e = new KeyboardEvent( message.origin, { bubbles:true, cancelable:true, char:String.fromCharCode(keycode), key:String.fromCharCode(keycode), shiftKey:false, ctrlKey:false, altKey:false } );
+Object.defineProperty(e, 'keyCode', {get : function() { return this.keyCodeVal; } });     
+e.keyCodeVal = keycode;
+document.querySelector("iframe").contentDocument.dispatchEvent(e);
+}
 } else {
-
+var keycode = default_keybindings[message.type];
+var e = new KeyboardEvent( message.origin, { bubbles:true, cancelable:true, char:String.fromCharCode(keycode), key:String.fromCharCode(keycode), shiftKey:false, ctrlKey:false, altKey:false } );
+Object.defineProperty(e, 'keyCode', {get : function() { return this.keyCodeVal; } });     
+e.keyCodeVal = keycode;
+document.querySelector("iframe").contentDocument.dispatchEvent(e);
 }
 }
 }
