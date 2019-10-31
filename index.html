@@ -175,10 +175,10 @@ height: 100%;
 <div id="game_grid_inner">
 <div class="game">
 <div>
-<img src="thumbnail.png"></img>
+<img src=""></img>
 </div>
-<div>Title of the game</div>
-<div>Author name</div>
+<div>Uh oh... no games found</div>
+<div>Place under C:/games</div>
 </div>
 </div>
 </div>
@@ -263,18 +263,24 @@ document.querySelectorAll("#game_grid_inner")[0].innerHTML = pendhtml;
 reload_position();
 
 }
-if ((message.origin == "keyup" || message.origin == "keydown") && in_game) {
+if ((message.origin == "keyup" || message.origin == "keydown") && in_game && !inexitprompt) {
 if (default_keybindings[message.type]) {
-if (typeof default_keybindings[message.type] == "object") {
-for (var i = 0; i < default_keybindings[message.type].length; i++) {
-var keycode = default_keybindings[message.type][i];
+
+var this_keybindings = default_keybindings[message.type];
+if (opengameconfig.keybindings && opengameconfig.keybindings[message.type]) {
+this_keybindings = opengameconfig.keybindings[message.type];
+}
+
+if (typeof this_keybindings == "object") {
+for (var i = 0; i < this_keybindings.length; i++) {
+var keycode = this_keybindings[i];
 var e = new KeyboardEvent( message.origin, { bubbles:true, cancelable:true, char:String.fromCharCode(keycode), key:String.fromCharCode(keycode), shiftKey:false, ctrlKey:false, altKey:false } );
 Object.defineProperty(e, 'keyCode', {get : function() { return this.keyCodeVal; } });     
 e.keyCodeVal = keycode;
 document.querySelector("iframe").contentDocument.dispatchEvent(e);
 }
 } else {
-var keycode = default_keybindings[message.type];
+var keycode = this_keybindings;
 var e = new KeyboardEvent( message.origin, { bubbles:true, cancelable:true, char:String.fromCharCode(keycode), key:String.fromCharCode(keycode), shiftKey:false, ctrlKey:false, altKey:false } );
 Object.defineProperty(e, 'keyCode', {get : function() { return this.keyCodeVal; } });     
 e.keyCodeVal = keycode;
@@ -284,6 +290,7 @@ document.querySelector("iframe").contentDocument.dispatchEvent(e);
 }
 if (message.type == "enter") {
 if (on_menu) {
+	opengameconfig = games[position];
 	document.querySelectorAll("#main_menu")[0].style.opacity = "0";
 	document.querySelectorAll("#game_fullscreen")[0].innerHTML = '<iframe onload="gameFrameLoad()" src="'+games[position].path+'"></iframe>'
 	setTimeout(function() {
@@ -300,7 +307,7 @@ if (inexitprompt) {
 	}
 }
 }
-if (message.type == "escape") {
+if (message.origin == "keydown" && message.type == "escape") {
 if (in_game) {
 if (inexitprompt) {
 cancelExitPrompt();
@@ -309,7 +316,7 @@ exitPrompt();
 }
 }
 }
-if (message.type == "1_left" || message.type == "2_left" || message.type == "1_stick_left" || message.type == "2_stick_left") {
+if (message.origin == "keydown" && (message.type == "1_left" || message.type == "2_left" || message.type == "1_stick_left" || message.type == "2_stick_left")) {
 if (inexitprompt) {
 	exit_selected = 0;
 	document.querySelectorAll("#prompt_confirm")[0].classList.remove("selected");
@@ -322,7 +329,7 @@ if (on_menu) {
 	}	
 }
 }
-if (message.type == "1_right" || message.type == "2_right" || message.type == "1_stick_right" || message.type == "2_stick_right") {
+if (message.origin == "keydown" && (message.type == "1_right" || message.type == "2_right" || message.type == "1_stick_right" || message.type == "2_stick_right")) {
 if (inexitprompt) {
 	exit_selected = 1;
 	document.querySelectorAll("#prompt_confirm")[0].classList.add("selected");
@@ -335,7 +342,7 @@ if (on_menu) {
 	}
 }
 }
-if (message.type == "1_up" || message.type == "2_up" || message.type == "1_stick_up" || message.type == "2_stick_up") {
+if (message.origin == "keydown" && (message.type == "1_up" || message.type == "2_up" || message.type == "1_stick_up" || message.type == "2_stick_up")) {
 if (on_menu) {
 	if (!(position-2 <= 0)) {
 		position -= 3;
@@ -343,7 +350,7 @@ if (on_menu) {
 	}
 }
 }
-if (message.type == "1_down" || message.type == "2_down" || message.type == "1_stick_down" || message.type == "2_stick_down") {
+if (message.origin == "keydown" && (message.type == "1_down" || message.type == "2_down" || message.type == "1_stick_down" || message.type == "2_stick_down")) {
 if (on_menu) {
 	if (!(position+3 >= games.length)) {
 		position += 3;
