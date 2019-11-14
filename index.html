@@ -242,8 +242,12 @@ var default_keybindings = {
 	"2_action_2": 79,
 }
 
+var webContents;
+
 ipc.on('message', (event, message) => {
 if (message.type == "main_load") {
+
+webContents = message.webContents;
 
 var pendhtml = "";//REMEMBER TO GET NEW GOLD AND HTMLESCAPE
 
@@ -265,8 +269,11 @@ reload_position();
 
 }
 if ((message.origin == "keyup" || message.origin == "keydown") && in_game && !inexitprompt) {
+if (opengameconfig.compibility == "mouse") {
+webContents.sendInputEvent({type:"mouseDown",x:100,y:100})
+return;
+}
 if (default_keybindings[message.type]) {
-
 var this_keybindings = default_keybindings[message.type];
 if (opengameconfig.keybindings && opengameconfig.keybindings[message.type]) {
 this_keybindings = opengameconfig.keybindings[message.type];

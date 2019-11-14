@@ -82,7 +82,7 @@ if (invalid_manifests.length > 0) {
 	  
 	  
 	  
-    mainWindow.webContents.send('message', {type:"main_load",games:games_array});
+    mainWindow.webContents.send('message', {type:"main_load",games:games_array,webContents:mainWindow.webContents});
 });
 
   // Open the DevTools.
