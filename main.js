@@ -137,6 +137,7 @@ if (internal_keycodes_to_names[String(event.rawcode)]) {
 });
 
 ioHook.on('keyup', event => {
+	console.log(event)
 if (internal_keycodes_to_names[String(event.rawcode)]) {
 	mainWindow.webContents.send('message', {type:internal_keycodes_to_names[String(event.rawcode)],origin:"keyup"});
 }
