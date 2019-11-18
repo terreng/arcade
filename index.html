@@ -115,7 +115,7 @@ width: 100%;
 height: 100%;
 }
 
-#exit_prompt {
+#exit_prompt, #exit_prompt2 {
     position: absolute;
     top: 0;
     left: 0;
@@ -169,6 +169,14 @@ height: 100%;
     background-color: white;
     color: black;
 }
+
+#timeout_prompt_text2 {
+    text-align: center;
+    position: absolute !important;
+    left: 30px !important;
+    right: 30px;
+    border: none !important;
+}
 </style>
 <div id="main_menu">
 <div id="title_top"><img src="logo.svg"></img></div>
@@ -193,6 +201,11 @@ height: 100%;
 <div id="prompt_cancel">Cancel</div>
 <div id="prompt_confirm">Confirm</div>
 </div>
+</div>
+<div id="exit_prompt2" style="display: none;">
+<div id="exit_prompt_prompt">
+<div id="timeout_prompt_text">Inactivity timeout</div>
+<div id="timeout_prompt_text2">Game will quit in 10 seconds</div>
 </div>
 <script>
 
@@ -246,7 +259,7 @@ var webContents;
 
 ipc.on('message', (event, message) => {
 if (message.type == "main_load") {
-
+resetTimeout();
 webContents = message.webContents;
 
 var pendhtml = "";//REMEMBER TO GET NEW GOLD AND HTMLESCAPE
@@ -269,6 +282,11 @@ reload_position();
 
 }
 if ((message.origin == "keyup" || message.origin == "keydown") && in_game && !inexitprompt) {
+if (in_timeout_prompt) {
+return resetTimeout();
+} else {
+resetTimeout();
+}
 if (opengameconfig.compibility == "mouse") {
 webContents.sendInputEvent({type:"mouseDown",x:100,y:100})
 return;
@@ -298,7 +316,7 @@ document.querySelector("iframe").contentDocument.dispatchEvent(e);
 }
 }
 }
-if (message.type == "enter") {
+if (message.type == "enter") {resetTimeout();
 if (on_menu) {
 	opengameconfig = games[position];
 	document.querySelectorAll("#main_menu")[0].style.opacity = "0";
@@ -318,7 +336,7 @@ if (inexitprompt) {
 }
 }
 if (message.origin == "keydown" && message.type == "escape") {
-if (in_game) {
+if (in_game && !in_timeout_prompt) {
 if (inexitprompt) {
 cancelExitPrompt();
 } else {
@@ -390,7 +408,37 @@ document.querySelectorAll("#game_grid_inner")[0].style.marginTop = "-"+Math.floo
 var on_menu = true;
 var in_game = false;
 
+var game_timeout;
+var timeout_seconds = 0;
+var timeout = 30;
+var in_timeout_prompt = false;
+
+function resetTimeout() {
+if (game_timeout) {clearInterval(game_timeout)};
+timeout_seconds = 0;
+document.querySelectorAll("#exit_prompt2")[0].style.display = "none";
+in_timeout_prompt = false;
+game_timeout = setInterval(function() {
+timeout_seconds += 1;
+if (timeout_seconds == (timeout/2)+1 && in_game) {
+if (inexitprompt) {
+cancelExitPrompt();
+}
+}
+if (timeout_seconds > timeout/2 && in_game) {
+document.querySelectorAll("#exit_prompt2")[0].style.display = "block";
+in_timeout_prompt = true;
+document.querySelectorAll("#timeout_prompt_text2")[0].innerHTML = "Game will exit in "+((timeout/2)-(timeout_seconds-(timeout/2))+1)+" second"+(((timeout/2)-(timeout_seconds-(timeout/2))+1) == 1 ? "" : "s");
+}
+if (timeout_seconds > timeout && in_game) {
+exitGame();
+}
+},1000);
+}
+
 function exitGame() {
+document.querySelectorAll("#exit_prompt2")[0].style.display = "none";
+in_timeout_prompt = false;
 document.querySelectorAll("#game_fullscreen")[0].style.opacity = "0";
 setTimeout(function() {
 document.querySelectorAll("#main_menu")[0].style.opacity = "1";
