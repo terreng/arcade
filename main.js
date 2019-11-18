@@ -31,7 +31,7 @@ function createWindow () {
 	frame: false,
 	kiosk: true,
 	skipTaskbar: true,
-	alwaysOnTop: false,
+	alwaysOnTop: true,
     webPreferences: {
 	  webSecurity: false,
 	  nativeWindowOpen: true
