@@ -282,12 +282,14 @@ document.querySelectorAll("#game_grid_inner")[0].innerHTML = pendhtml;
 reload_position();
 
 }
-if ((message.origin == "keyup" || message.origin == "keydown") && in_game && !inexitprompt) {
-if (in_timeout_prompt) {
-return resetTimeout();
-} else {
-resetTimeout();
+if (message.origin == "keydown" && in_game && in_timeout_prompt) {
+return;
 }
+if (message.origin == "keyup" && in_game && in_timeout_prompt) {
+return resetTimeout();
+}
+if ((message.origin == "keyup" || message.origin == "keydown") && in_game && !inexitprompt) {
+resetTimeout();
 if (opengameconfig.compibility == "mouse") {
 webContents.sendInputEvent({type:"mouseDown",x:100,y:100})
 return;
@@ -453,7 +455,7 @@ in_game = false;
 }
 
 function gameFrameLoad() {
-var styles = '<style>#openfl-content {height: 100%; width: 100%;}canvas {height: 100% !important;width: 100%!important;object-fit: contain;margin-left: 0px !important;margin-top: 0px !important;}</style>';
+var styles = '<style>#openfl-content {height: 100%; width: 100%;}canvas {cursor:none;height: 100% !important;width: 100%!important;object-fit: contain;margin-left: 0px !important;margin-top: 0px !important;}</style>';
 document.querySelectorAll("iframe")[0].contentDocument.querySelector("body").insertAdjacentHTML("beforeend",styles);
 checkDisplayGame();
 }
