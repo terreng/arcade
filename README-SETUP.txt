@@ -14,7 +14,7 @@ Run "npm config set python C:\Python39\python.exe"
 
 Download this repository to C:/arcade
 
-Open a terminal window to C:/arcade and run "npm install electron -g" and "npm install"
+Open a terminal window to C:/arcade and run "npm install electron@4.1.3 -g", "npm install iohook -g", and "npm install"
 
 Install Joy2Key
 https://joytokey.net/en/download
