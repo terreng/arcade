@@ -69,6 +69,7 @@ games_array.push({
 	keybindings: contents.keybindings,
 	type: contents.type,
 	thumbnail: "C:\\games\\"+file+"\\thumbnail.png",
+	video_thumbnail: "C:\\games\\"+file+"\\video_thumbnail.mp4",
 	path: (contents.type == "stencyl" ? "C:\\games\\"+file+"\\index.html" : contents.path),
 	id: file
 });
