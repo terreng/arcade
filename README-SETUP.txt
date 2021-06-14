@@ -18,3 +18,5 @@ Open a terminal window to C:/arcade and run "npm install electron@4.1.3 -g", "np
 
 Install Joy2Key
 https://joytokey.net/en/download
+Map all of the buttons to match docs/controls.pdf
+
