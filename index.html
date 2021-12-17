@@ -339,6 +339,7 @@ if (on_menu) {
 	opengameconfig = games[position];
 	document.querySelectorAll("#main_menu")[0].style.opacity = "0";
 	document.querySelectorAll("#game_fullscreen")[0].innerHTML = '<iframe onload="gameFrameLoad()" src="'+games[position].path+'"></iframe>'
+	document.querySelector("iframe")[0].contentWindow.alert = function() {};
 	setTimeout(function() {
 		checkDisplayGame();
 	},500)
@@ -472,6 +473,7 @@ in_game = false;
 function gameFrameLoad() {
 var styles = '<style>#openfl-content {height: 100%; width: 100%;}canvas {cursor:none;height: 100% !important;width: 100%!important;object-fit: contain;margin-left: 0px !important;margin-top: 0px !important;}</style>';
 document.querySelectorAll("iframe")[0].contentDocument.querySelector("body").insertAdjacentHTML("beforeend",styles);
+document.querySelectorAll("iframe")[0].contentDocument.querySelector("body").style.overflowY = "hidden";
 checkDisplayGame();
 }
 
