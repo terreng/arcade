@@ -339,7 +339,7 @@ if (on_menu) {
 	opengameconfig = games[position];
 	document.querySelectorAll("#main_menu")[0].style.opacity = "0";
 	document.querySelectorAll("#game_fullscreen")[0].innerHTML = '<iframe onload="gameFrameLoad()" src="'+games[position].path+'"></iframe>'
-	document.querySelector("iframe")[0].contentWindow.alert = function() {};
+	document.querySelectorAll("iframe")[0].contentWindow.alert = function() {};
 	setTimeout(function() {
 		checkDisplayGame();
 	},500)
