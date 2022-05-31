@@ -13,12 +13,12 @@ Create a file in your game's folder called 'manifest.json'
 
 You want to add this to the file, replacing the words in caps with the actual things:
 {
-    title: TITLE_OF_YOUR_GAME,
-    author: AUTHOR_OF_THE_GAME,
-    type: GAME_ENGINE_USED_FOR_GAME,
+    title: "TITLE_OF_YOUR_GAME",
+    author: "AUTHOR_OF_THE_GAME",
+    type: "GAME_ENGINE_USED_FOR_GAME",
 }
 
-(for right now the game engine can only be HTML5)
+(for right now the game engine can only be stencyl)
 
 And that's basically it! There are some extra little things you can do like adding a
 thumbnail which are explained below.
@@ -48,9 +48,9 @@ can find by looking it up
 
 2. Now you want to add the 'keybindings' parameter to the 'manifest.json' file in your game folder like so:
 {
-    title: TITLE,
-    author: AUTHOR,
-    type: TYPE,
+    title: "TITLE",
+    author: "AUTHOR",
+    type: "TYPE",
     keybindings: {
 
     }
