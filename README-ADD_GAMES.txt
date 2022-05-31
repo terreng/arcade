@@ -18,7 +18,7 @@ You want to add this to the file, replacing the words in caps with the actual th
     type: GAME_ENGINE_USED_FOR_GAME,
 }
 
-(for right now the game engine can only be stencyl)
+(for right now the game engine can only be HTML5)
 
 And that's basically it! There are some extra little things you can do like adding a
 thumbnail which are explained below.

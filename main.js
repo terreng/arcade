@@ -59,7 +59,7 @@ function createWindow () {
 			
 			console.log(contents)
 			contents = carefullyParseJSON(contents);
-			if (!(contents && contents.title && typeof contents.title == "string" && contents.author && typeof contents.author == "string" && (contents.type == "stencyl" || (contents.type == "windows" && contents.path && typeof contents.path == "string")))) {
+			if (!(contents && contents.title && typeof contents.title == "string" && contents.author && typeof contents.author == "string" && (contents.type == "HTML5" || (contents.type == "windows" && contents.path && typeof contents.path == "string")))) {
 				invalid_manifests.push(file);
 				return;
 			}
@@ -71,7 +71,7 @@ function createWindow () {
 				type: contents.type,
 				thumbnail: "C:\\games\\"+file+"\\thumbnail.png",
 				video_thumbnail: "C:\\games\\"+file+"\\video_thumbnail.mp4",
-				path: (contents.type == "stencyl" ? "C:\\games\\"+file+"\\index.html" : contents.path),
+				path: (contents.type == "HTML5" ? "C:\\games\\"+file+"\\index.html" : contents.path),
 				id: file
 			});
 
