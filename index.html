@@ -319,18 +319,17 @@ this_keybindings = opengameconfig.keybindings[message.type];
 
 if (typeof this_keybindings == "object") {
 for (var i = 0; i < this_keybindings.length; i++) {
-var keycode = this_keybindings[i];
-var e = new KeyboardEvent( message.origin, { bubbles:true, cancelable:true, char:String.fromCharCode(keycode), key:String.fromCharCode(keycode), shiftKey:false, ctrlKey:false, altKey:false } );
-Object.defineProperty(e, 'keyCode', {get : function() { return this.keyCodeVal; } });     
-e.keyCodeVal = keycode;
-document.querySelector("iframe").contentDocument.dispatchEvent(e);
+sendKeyEvent(this_keybindings[i]);
 }
 } else {
-var keycode = this_keybindings;
-var e = new KeyboardEvent( message.origin, { bubbles:true, cancelable:true, char:String.fromCharCode(keycode), key:String.fromCharCode(keycode), shiftKey:false, ctrlKey:false, altKey:false } );
-Object.defineProperty(e, 'keyCode', {get : function() { return this.keyCodeVal; } });     
-e.keyCodeVal = keycode;
-document.querySelector("iframe").contentDocument.dispatchEvent(e);
+sendKeyEvent(this_keybindings);
+}
+function sendKeyEvent(keycode) {
+    console.log(keycode);
+    var e = new KeyboardEvent( message.origin, { bubbles:true, cancelable:true, char:String.fromCharCode(keycode), key:String.fromCharCode(keycode), shiftKey:false, ctrlKey:false, altKey:false } );
+    Object.defineProperty(e, 'keyCode', {get : function() { return this.keyCodeVal; } });     
+    e.keyCodeVal = keycode;
+    document.querySelector("iframe").contentDocument.dispatchEvent(e);
 }
 }
 }
