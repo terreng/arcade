@@ -312,25 +312,29 @@ return;
 
 if (default_keybindings[message.type]) {
 var this_keybindings = default_keybindings[message.type];
+
 if (opengameconfig.keybindings && opengameconfig.keybindings[message.type]) {
 this_keybindings = opengameconfig.keybindings[message.type];
-
 }
 
-if (typeof this_keybindings == "object") {
-for (var i = 0; i < this_keybindings.length; i++) {
-sendKeyEvent(this_keybindings[i]);
+if (typeof this_keybindings !== "object") {
+    this_keybindings = [this_keybindings];
 }
-} else {
-sendKeyEvent(this_keybindings);
-}
-function sendKeyEvent(keycode) {
-    var e = new KeyboardEvent( message.origin, { bubbles:true, cancelable:true, char:String.fromCharCode(keycode), key:String.fromCharCode(keycode), shiftKey:false, ctrlKey:false, altKey:false } );
+
+function sendKeyEvent(keycode, event_name) {
+    var e = new KeyboardEvent( event_name, { bubbles:true, cancelable:true, char:String.fromCharCode(keycode), key:String.fromCharCode(keycode), shiftKey:false, ctrlKey:false, altKey:false } );
     Object.defineProperty(e, 'keyCode', {get : function() { return this.keyCodeVal; } });     
     e.keyCodeVal = keycode;
-    Object.defineProperty(e, "keyCode", {"value" : keycode})
     document.querySelector("iframe").contentDocument.dispatchEvent(e);
 }
+
+for (var i = 0; i < this_keybindings.length; i++) {
+    sendKeyEvent(this_keybindings[i], message.origin);
+    if (message.origin == "keydown") {
+        sendKeyEvent(this_keybindings[i], "keypress");
+    }
+}
+
 }
 }
 if (message.type == "enter") {resetTimeout();
