@@ -287,7 +287,7 @@ shuffle(message.games)
 
 for (var i = 0; i < message.games.length; i++) {
 
-pendhtml += '<div class="game" id="game_'+message.games[i].id+'"><div><img src="'+message.games[i].thumbnail+'" '+(message.games[i].video_thumbnail ? "" : ' class="novideo"')+'></img><video autoplay loop nocontrols src="'+(message.games[i].video_thumbnail)+'" '+(message.games[i].video_thumbnail ? "" : ' class="novideo"')+'></video></div><div>'+htmlescape(message.games[i].title)+'</div><div>'+htmlescape(message.games[i].author)+'</div></div>'
+pendhtml += '<div class="game" id="game_'+message.games[i].id+'"><div><img src="'+message.games[i].thumbnail+'" '+(message.games[i].video_thumbnail ? "" : ' class="novideo"')+'></img><video autoplay loop nocontrols muted src="'+(message.games[i].video_thumbnail)+'" '+(message.games[i].video_thumbnail ? "" : ' class="novideo"')+'></video></div><div>'+htmlescape(message.games[i].title)+'</div><div>'+htmlescape(message.games[i].author)+'</div></div>'
 
 }
 
