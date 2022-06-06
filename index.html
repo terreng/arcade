@@ -329,6 +329,7 @@ function sendKeyEvent(keycode, event_name) {
 }
 
 for (var i = 0; i < this_keybindings.length; i++) {
+    console.log(message.origin);
     sendKeyEvent(this_keybindings[i], message.origin);
     if (message.origin == "keydown") {
         sendKeyEvent(this_keybindings[i], "keypress");
