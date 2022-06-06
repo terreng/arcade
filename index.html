@@ -193,6 +193,17 @@ height: 100%;
     right: 30px;
     border: none !important;
 }
+
+#system_handling_key_events {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-size: 50px;
+    color: red;
+    z-index: 1000000;
+    background: rgba(0, 0, 0, 0.5);
+}
 </style>
 <div id="main_menu">
 <div id="title_top"><img src="logo.svg"></img></div>
@@ -223,6 +234,8 @@ height: 100%;
 <div id="timeout_prompt_text">Inactivity timeout</div>
 <div id="timeout_prompt_text2">Game will quit in 10 seconds</div>
 </div>
+</div>
+<div id="system_handling_key_events">System handling key events</div>
 <script>
 
 function htmlescape(str) {
@@ -338,7 +351,8 @@ for (var i = 0; i < this_keybindings.length; i++) {
 
 }
 }
-if (message.type == "enter") {resetTimeout();
+if (message.type == "enter") {
+resetTimeout();
 if (on_menu) {
 	opengameconfig = games[position];
 	document.querySelectorAll("#main_menu")[0].style.opacity = "0";
@@ -409,6 +423,13 @@ if (on_menu) {
 	}
 }
 }
+if (message.type == "system_handling_enabled") {
+    document.querySelector("#system_handling_key_events").style.display = "block";
+}
+if (message.type == "system_handling_disabled") {
+    document.querySelector("#system_handling_key_events").style.display = "none";
+}
+
 })
 
 /*

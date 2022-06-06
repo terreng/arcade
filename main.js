@@ -234,15 +234,17 @@ globalShortcut.register('O', () => {//player two action 2
 //
 
 globalShortcut.register('Insert', () => {
+	mainWindow.webContents.send('message', {type:"system_handling_enabled"});
 	globalShortcut.unregisterAll();
-setTimeout(function() {
-	globalShortcut.register('Insert', () => {
-		globalShortcut.unregisterAll();
-		setTimeout(function() {
-			registerAllKeyListeners();
-		},300)
-	})
-},300)
+	setTimeout(function() {
+		globalShortcut.register('Insert', () => {
+			mainWindow.webContents.send('message', {type:"system_handling_disabled"});
+			globalShortcut.unregisterAll();
+			setTimeout(function() {
+				registerAllKeyListeners();
+			},300)
+		})
+	},300)
 })
 }
 
