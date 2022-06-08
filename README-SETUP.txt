@@ -22,7 +22,7 @@ Map all of the buttons to match "internal keybindings" column of "docs/Keybindin
 
 Put all of the games in C:/games
 (Make sure to add the manifest.json files with the title, author and type)
-(thumbnails are called 'thumbnail' and previews are called 'video_thumbnail')
+(thumbnails are called 'thumbnail.png' and previews are called 'video_thumbnail.mp4')
 
 Add keybindings if need be
 (An object of the key on the arcade to a keycode on the keyboard)
