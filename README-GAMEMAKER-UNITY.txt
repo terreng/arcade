@@ -1,4 +1,4 @@
-Add games to C:/games like normal. All HTML5 games are type “stencyl” in the config.json file.
+Add games to C:/games like normal. All HTML5 games are type “html5” in the config.json file.
 I know that doesn’t make sense, but that’s how it is. Don’t @ me.
 
 Game Maker:
