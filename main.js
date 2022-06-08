@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, globalShortcut, dialog} = require('electron')
+const {app, BrowserWindow, globalShortcut } = require('electron')
 app.commandLine.appendSwitch('--autoplay-policy','no-user-gesture-required')
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -49,13 +49,19 @@ function createWindow () {
 				var contents = fs.readFileSync("C:\\games\\"+file+"\\manifest.json", {encoding: 'utf-8'});
 			}
 			catch {
-				invalid_manifests.push(file);
+				invalid_manifests.push(file+" - failed to open C:\\games\\"+file+"\\manifest.json. Does it exist? Make sure not to leave other files or non-game directories in C:\\games, and make sure all games have a manifest file.");
 				return;
 			}
 			
 			contents = carefullyParseJSON(contents);
-			if (!(contents && contents.title && typeof contents.title == "string" && contents.author && typeof contents.author == "string" && contents.type && (contents.type.toLowerCase() == "html5" || (contents.type.toLowerCase() == "windows" && contents.path && typeof contents.path == "string")))) {
-				invalid_manifests.push(file);
+
+			if (!contents) {
+				invalid_manifests.push(file+" - failed to parse JSON, probably formatted invalidly.");
+				return;
+			}
+
+			if (!(contents.title && typeof contents.title == "string" && contents.author && typeof contents.author == "string" && contents.type && (contents.type.toLowerCase() == "html5" || (contents.type.toLowerCase() == "windows" && contents.path && typeof contents.path == "string")))) {
+				invalid_manifests.push(file+" - missing or invalid required fields: title, author, type. See README-ADD_GAMES.txt for help.");
 				return;
 			}
 				
@@ -73,7 +79,7 @@ function createWindow () {
 		});
 
 		if (invalid_manifests.length > 0) {
-			mainWindow.webContents.send('message', {type:"load_error",message:"Error: Invalid manifest.json for game(s): "+invalid_manifests.join(", ")+"\n\nUse ALT + F4 to exit. See README-ADD_GAMES.txt for help with the file format."});
+			mainWindow.webContents.send('message', {type:"load_error",message:"Error: Invalid manifest.json for game(s):\n\n "+invalid_manifests.join("\n")+"\n\nUse ALT + F4 to exit. See README-ADD_GAMES.txt for help with the file format."});
 		} else {
 			mainWindow.webContents.send('message', {type:"main_load",games:games_array,webContents:mainWindow.webContents});
 		}
