@@ -39,11 +39,27 @@ At this point, the game will show up on the menu, but it won't have a thumbnail.
 2. Name it 'thumbnail.png'
 3. Add it to your game folder on the arcade
 
+Want to use a .jpg or some other image file format aside from .png?
+Add a "thumbnail" entry to the manifest.json, and set it to the filename.
+For example:
+{
+    ...
+    thumbnail: "screenshot.jpeg"
+}
+
 # Step 4: Add a video preview (Optional)
 This video will play when you hover over the game on the main menu.
 1. Take a screen recorded video of your game
 2. Name it 'video_thumbnail.mp4'
 3. Add it to your game folder on the arcade
+
+Want to use a .mov or some other video file format aside from .mp4?
+Add a "video_thumbnail" entry to the manifest.json, and set it to the filename.
+For example:
+{
+    ...
+    video_thumbnail: "screen_recording.mov"
+}
 
 # Step 5: Change keybindings
 If your game does not work properly with the arcade controls or you just want to

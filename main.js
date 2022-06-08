@@ -70,8 +70,8 @@ function createWindow () {
 				author: contents.author,
 				keybindings: contents.keybindings,
 				type: contents.type,
-				thumbnail: "C:\\games\\"+file+"\\thumbnail.png",
-				video_thumbnail: "C:\\games\\"+file+"\\video_thumbnail.mp4",
+				thumbnail: "C:\\games\\"+file+"\\"+(contents.thumbnail ? contents.thumbnail : "thumbnail.png"),
+				video_thumbnail: "C:\\games\\"+file+"\\"+(contents.video_thumbnail ? contents.video_thumbnail : "video_thumbnail.mp4"),
 				path: (contents.type.toLowerCase() == "html5" ? "C:\\games\\"+file+"\\index.html" : contents.path),
 				id: file
 			});

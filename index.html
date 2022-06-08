@@ -319,7 +319,7 @@ shuffle(message.games)
 
 for (var i = 0; i < message.games.length; i++) {
 
-pendhtml += '<div class="game" id="game_'+message.games[i].id+'"><div><img src="'+message.games[i].thumbnail+'" '+(message.games[i].video_thumbnail ? "" : ' class="novideo"')+'></img><video autoplay loop nocontrols muted src="'+(message.games[i].video_thumbnail)+'" '+(message.games[i].video_thumbnail ? "" : ' class="novideo"')+'></video></div><div>'+htmlescape(message.games[i].title)+'</div><div>'+htmlescape(message.games[i].author)+'</div></div>'
+pendhtml += '<div class="game" id="game_'+message.games[i].id+'"><div><img src="'+message.games[i].thumbnail+'" onerror="this.src = \'placeholder.png\'"></img><video onerror="this.previousElementSibling.classList.add(\'novideo\')" loop nocontrols muted src="'+(message.games[i].video_thumbnail)+'" '+(message.games[i].video_thumbnail ? "" : ' class="novideo"')+'></video></div><div>'+htmlescape(message.games[i].title)+'</div><div>'+htmlescape(message.games[i].author)+'</div></div>'
 
 }
 
@@ -467,8 +467,10 @@ function reload_position() {
 var childs = document.querySelectorAll("#game_grid_inner")[0].children;
 for (var i = 0; i < childs.length; i++) {
 childs[i].classList.remove("selected");
+childs[i].querySelector("video").pause();
 }
 childs[position].classList.add("selected");
+childs[position].querySelector("video").play();
 document.querySelectorAll("#game_grid_inner")[0].style.marginTop = "-"+Math.floor(position/3)*581+"px";
 }
 
