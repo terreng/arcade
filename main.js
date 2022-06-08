@@ -6,10 +6,6 @@ app.commandLine.appendSwitch('--autoplay-policy','no-user-gesture-required')
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-// !!!!
-//hide window on creation, programatically wait for firebase command and then show
-// !!!!
-
 const fs = require('fs');
 
 function carefullyParseJSON(string){
@@ -57,9 +53,8 @@ function createWindow () {
 				return;
 			}
 			
-			console.log(contents)
 			contents = carefullyParseJSON(contents);
-			if (!(contents && contents.title && typeof contents.title == "string" && contents.author && typeof contents.author == "string" && (contents.type == "HTML5" || (contents.type == "windows" && contents.path && typeof contents.path == "string")))) {
+			if (!(contents && contents.title && typeof contents.title == "string" && contents.author && typeof contents.author == "string" && contents.type && (contents.type.toLowerCase() == "html5" || (contents.type.toLowerCase() == "windows" && contents.path && typeof contents.path == "string")))) {
 				invalid_manifests.push(file);
 				return;
 			}
@@ -71,20 +66,17 @@ function createWindow () {
 				type: contents.type,
 				thumbnail: "C:\\games\\"+file+"\\thumbnail.png",
 				video_thumbnail: "C:\\games\\"+file+"\\video_thumbnail.mp4",
-				path: (contents.type == "HTML5" ? "C:\\games\\"+file+"\\index.html" : contents.path),
+				path: (contents.type.toLowerCase() == "html5" ? "C:\\games\\"+file+"\\index.html" : contents.path),
 				id: file
 			});
 
-		//console.log(file);
 		});
 
 		if (invalid_manifests.length > 0) {
-			dialog.showErrorBox("Error","Invalid manifest.json for game(s): "+invalid_manifests.join(", ")+" (Skipping)");
+			mainWindow.webContents.send('message', {type:"load_error",message:"Error: Invalid manifest.json for game(s): "+invalid_manifests.join(", ")+"\n\nUse ALT + F4 to exit. See README-ADD_GAMES.txt for help with the file format."});
+		} else {
+			mainWindow.webContents.send('message', {type:"main_load",games:games_array,webContents:mainWindow.webContents});
 		}
-			
-			
-			
-		mainWindow.webContents.send('message', {type:"main_load",games:games_array,webContents:mainWindow.webContents});
 	});
 
 	// Open the DevTools.
@@ -132,16 +124,12 @@ var internal_keycodes_to_names = {
 }
 
 ioHook.on('keydown', event => {
-	console.log(event);//TODO: Get ASCII ids for all keys and detect release
-
 	if (internal_keycodes_to_names[String(event.rawcode)]) {
 		mainWindow.webContents.send('message', {type:internal_keycodes_to_names[String(event.rawcode)],origin:"keydown"});
 	}
 });
 
 ioHook.on('keyup', event => {
-	console.log(event)
-
 	if (internal_keycodes_to_names[String(event.rawcode)]) {
 		mainWindow.webContents.send('message', {type:internal_keycodes_to_names[String(event.rawcode)],origin:"keyup"});
 	}

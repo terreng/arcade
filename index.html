@@ -204,6 +204,20 @@ height: 100%;
     z-index: 1000000;
     background: rgba(0, 0, 0, 0.5);
 }
+
+#load_error {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 30px;
+    padding: 20px;
+    color: white;
+    z-index: 1000000;
+    background: linear-gradient(0deg, rgba(60,12,0,1) 0%, rgba(41,41,41,1) 72%);
+}
 </style>
 <div id="main_menu">
 <div id="title_top"><img src="logo.svg"></img></div>
@@ -236,6 +250,7 @@ height: 100%;
 </div>
 </div>
 <div id="system_handling_key_events">System handling key events</div>
+<div id="load_error"></div>
 <script>
 
 function htmlescape(str) {
@@ -287,6 +302,10 @@ var default_keybindings = {
 var webContents;
 
 ipc.on('message', (event, message) => {
+if (message.type == "load_error") {
+document.querySelector("#load_error").innerText = message.message;
+document.querySelector("#load_error").style.display = "block";
+}
 if (message.type == "main_load") {
 resetTimeout();
 webContents = message.webContents;
@@ -303,8 +322,6 @@ for (var i = 0; i < message.games.length; i++) {
 pendhtml += '<div class="game" id="game_'+message.games[i].id+'"><div><img src="'+message.games[i].thumbnail+'" '+(message.games[i].video_thumbnail ? "" : ' class="novideo"')+'></img><video autoplay loop nocontrols muted src="'+(message.games[i].video_thumbnail)+'" '+(message.games[i].video_thumbnail ? "" : ' class="novideo"')+'></video></div><div>'+htmlescape(message.games[i].title)+'</div><div>'+htmlescape(message.games[i].author)+'</div></div>'
 
 }
-
-console.log(pendhtml)
 
 document.querySelectorAll("#game_grid_inner")[0].innerHTML = pendhtml;
 reload_position();
