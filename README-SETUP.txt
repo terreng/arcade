@@ -26,3 +26,5 @@ Put all of the games in C:/games
 
 Add keybindings if need be
 (An object of the key on the arcade to a keycode on the keyboard)
+
+See README-ADD_GAMES.txt for more detailed instructions
