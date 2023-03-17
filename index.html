@@ -260,7 +260,6 @@ return str;
 str = String(str);
 return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
-const ipc = require('electron').ipcRenderer;
 
 var position = 0;
 
@@ -301,14 +300,14 @@ var default_keybindings = {
 
 var webContents;
 
-ipc.on('message', (event, message) => {
+window.api.initipc((event, message) => {
 if (message.type == "load_error") {
 document.querySelector("#load_error").innerText = message.message;
 document.querySelector("#load_error").style.display = "block";
 }
 if (message.type == "main_load") {
 resetTimeout();
-webContents = message.webContents;
+//webContents = message.webContents;
 
 var pendhtml = "";//REMEMBER TO GET NEW GOLD AND HTMLESCAPE
 
@@ -539,11 +538,11 @@ in_game = true;
 }
 }
 
-const remote = require('electron').remote;
-function exit() {
-var window = remote.getCurrentWindow();
-       window.close();
-}
+// const remote = require('electron').remote;
+// function exit() {
+// var window = remote.getCurrentWindow();
+//        window.close();
+// }
 
 var exit_selected = 0;
 var inexitprompt = false;

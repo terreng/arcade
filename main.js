@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, globalShortcut } = require('electron')
 app.commandLine.appendSwitch('--autoplay-policy','no-user-gesture-required')
+var path = require("path")
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -30,13 +31,17 @@ function createWindow () {
 		alwaysOnTop: true,
 		webPreferences: {
 			webSecurity: false,
-			nativeWindowOpen: true
+			nativeWindowOpen: true,
+			enableRemoteModule: true,
+			preload: path.join(__dirname, "preload.js")
 		}
 	});
 	// mainWindow.setMenuBarVisibility(false)
 
 	// and load the index.html of the app.
 	mainWindow.loadFile('index.html');
+
+	// mainWindow.webContents.openDevTools();
 
 	mainWindow.webContents.on('did-finish-load', () => {
 	 
@@ -81,7 +86,7 @@ function createWindow () {
 		if (invalid_manifests.length > 0) {
 			mainWindow.webContents.send('message', {type:"load_error",message:"Error: Invalid manifest.json for game(s):\n\n "+invalid_manifests.join("\n")+"\n\nUse ALT + F4 to exit. See README-ADD_GAMES.txt for help with the file format."});
 		} else {
-			mainWindow.webContents.send('message', {type:"main_load",games:games_array,webContents:mainWindow.webContents});
+			mainWindow.webContents.send('message', {type:"main_load",games:games_array});
 		}
 	});
 
